@@ -1,2 +1,2 @@
 # Axis
-A WIP roblox framework
+Axis is a roblox framework striving to make scripting on roblox as simple as possible. It is designed to work in games that try to make roblox look and feel as realistic as possible. Originally designed for horror games but can be used in many other types of games
