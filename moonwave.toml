@@ -21,6 +21,8 @@ classes = [
     "EventSystem",
 ]
 
+gitSourceBranch = "Main"
+
 [footer]
 style = "dark"
 copyright = "Copyright © 2024 Sebastian2852. Built with Moonwave and Docusaurus"
