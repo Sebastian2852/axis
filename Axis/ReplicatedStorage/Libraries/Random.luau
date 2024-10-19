@@ -42,7 +42,31 @@ function RandomLib:GenerateNumber(Min :number, Max :number) :number
 end
 
 --[=[
+    Generate a random integer between `Min` and `Max`
+
+    ```lua
+    local RandomObject = Axis.Lib.Random.new()
+    print(RandomObject:GenerateInteger(5, 10)) -- Generate a random number between 5 and 10
+    ```
+
+    @param Min number
+    @param Max number
+    @param Amount number
+
+    @return number
+]=]
+function RandomLib:GenerateInteger(Min :number, Max :number, Amount :number) :number
+    return self._Object:NextInteger(Min, Max)
+end
+
+
+--[=[
     Generate a set of random integer between `Min` and `Max` and returns them as a table
+
+    ```lua
+    local RandomObject = Axis.Lib.Random.new()
+    print(RandomObject:GenerateIntegers(50, 5, 10)) -- Generate 50 random numbers between 5 and 10
+    ```
 
     @param Min number
     @param Max number
@@ -56,19 +80,6 @@ function RandomLib:GenerateIntegers(Amount :number, Min :number, Max :number) :{
         table.insert(Generated, self._Object:NextInteger(Min, Max))
     end
     return Generated
-end
-
---[=[
-    Generate a random integer between `Min` and `Max`
-
-    @param Min number
-    @param Max number
-    @param Amount number
-
-    @return number
-]=]
-function RandomLib:GenerateInteger(Min :number, Max :number, Amount :number) :number
-    return self._Object:NextInteger(Min, Max)
 end
 
 --[=[
