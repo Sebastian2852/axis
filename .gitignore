@@ -8,3 +8,6 @@
 build/
 Packages/
 *.lock
+
+moonwavebuild.bat
+moonwavedev.bat
