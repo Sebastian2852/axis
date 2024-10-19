@@ -1,0 +1,10 @@
+# Project place file
+/Atlas.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+build/
+Packages/
+*.lock

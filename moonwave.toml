@@ -1,0 +1,26 @@
+[[classOrder]]
+classes = ["Axis"]
+
+[[classOrder]]
+section = "Libraries"
+classes = [
+    "RandomLib",
+]
+
+[[classOrder]]
+section = "Configs"
+classes = [
+    "PlayerConfig",
+]
+
+[[classOrder]]
+section = "Core"
+classes = [
+    "Bootstrap",
+    "ModuleSystem",
+    "EventSystem",
+]
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2024 Sebastian2852. Built with Moonwave and Docusaurus"

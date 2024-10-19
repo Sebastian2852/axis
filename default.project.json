@@ -1,0 +1,38 @@
+{
+  "name": "Axis",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "Axis": {
+        "$path": "Axis/ReplicatedStorage"
+      },
+
+      "Packages":{
+        "$path":"Packages"
+      }
+    },
+
+    "ServerScriptService": {
+      "Axis": {
+        "$path": "Axis/ServerScriptService"
+      },
+
+      "Test":{
+        "$path": "Game/ServerScriptService"
+      }
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Axis": {
+          "$path": "Axis/StarterPlayerScripts"
+        },
+
+        "Test":{
+          "$path": "Game/StarterPlayerScripts"
+        }
+      }
+    }
+  }
+}
