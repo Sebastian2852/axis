@@ -1,3 +1,5 @@
+baseUrl = "/Axis/"
+
 [[classOrder]]
 classes = ["Axis"]
 
