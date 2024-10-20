@@ -6,6 +6,6 @@ Axis:AddModulesDeep(script.Parent.Modules)
 Axis:Boot():andThen(function()
     print("Axis booted")
 
-    local Test = Axis.ModuleSystem.GetModule("Test")
+    local Test = Axis.GetModule("Test")
     Test:Foo()
 end):catch(warn)

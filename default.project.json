@@ -25,10 +25,6 @@
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Axis": {
-          "$path": "Axis/StarterPlayerScripts"
-        },
-
         "Test":{
           "$path": "Test/StarterPlayerScripts"
         }

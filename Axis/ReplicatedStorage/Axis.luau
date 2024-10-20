@@ -12,7 +12,7 @@ local Types = require(ReplicatedStorage.Axis.Core.Types)
 --[=[
     Contains all the custom libraries axis provides
     @within Axis
-    @prop Lib {}
+    @prop Lib {Random: RandomLib}
     @readonly
 ]=]
 Axis.Lib = {}
@@ -40,7 +40,7 @@ Axis.Promise = require(ReplicatedStorage.Packages.Promise)
     @prop Bootstrap Bootstrap
     @private
 ]=]
-Axis.Bootstrap = require(ReplicatedStorage.Axis.Core.Bootstrapper)
+Axis._Bootstrap = require(ReplicatedStorage.Axis.Core.Bootstrapper)
 
 if RunService:IsServer() then
 
@@ -51,7 +51,7 @@ if RunService:IsServer() then
         @private
         @readonly
     ]=]
-    Axis.ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
+    Axis._ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
 
     --[=[
         Wrapper function for module system function
@@ -59,7 +59,7 @@ if RunService:IsServer() then
         @server
     ]=]
     function Axis:AddModule(PathToModule :ModuleScript)
-        Axis.ModuleSystem:Add(PathToModule)
+        Axis._ModuleSystem:Add(PathToModule)
     end
 
     --[=[
@@ -75,7 +75,7 @@ if RunService:IsServer() then
     function Axis:AddModules(Parent :Folder)
         for _, Child :ModuleScript? in pairs(Parent:GetChildren()) do
             if not Child:IsA("ModuleScript") then continue end
-            Axis.ModuleSystem:Add(Child)
+            Axis._ModuleSystem:Add(Child)
         end
     end
 
@@ -88,7 +88,7 @@ if RunService:IsServer() then
     function Axis:AddModulesDeep(Parent :Folder)
         for _, Child :ModuleScript? in pairs(Parent:GetDescendants()) do
             if not Child:IsA("ModuleScript") then continue end
-            Axis.ModuleSystem:Add(Child)
+            Axis._ModuleSystem:Add(Child)
         end
     end
 
@@ -118,7 +118,15 @@ if RunService:IsServer() then
         @return Module
     ]=]
     function Axis.CreateModule(ModuleDef :Types.ModuleDefinition) :Types.Module
-        return Axis.ModuleSystem.Create(ModuleDef)
+        return Axis._ModuleSystem.Create(ModuleDef)
+    end
+
+    --[=[
+        Wrapper function for module system
+        @server
+    ]=]
+    function Axis.GetModule(Name :string) :Types.Controller
+        return Axis._ModuleSystem.GetModule(Name)
     end
 end
 
@@ -130,14 +138,14 @@ if RunService:IsClient() then
         @private
         @readonly
     ]=]
-    Axis.ControllerSystem = require(ReplicatedStorage.Axis.Core.ControllerSystem)
+    Axis._ControllerSystem = require(ReplicatedStorage.Axis.Core.ControllerSystem)
 
     --[=[
         Wrapper function for controller system function
         @client
     ]=]
     function Axis:AddController(ControllerScript :ModuleScript)
-        return Axis.ControllerSystem:Add(ControllerScript)
+        return Axis._ControllerSystem:Add(ControllerScript)
     end
 
     --[=[
@@ -153,7 +161,7 @@ if RunService:IsClient() then
     function Axis:AddControllers(Parent :Folder)
         for _, Child :ModuleScript? in pairs(Parent:GetChildren()) do
             if not Child:IsA("ModuleScript") then continue end
-            Axis.ControllerSystem:Add(Child)
+            Axis._ControllerSystem:Add(Child)
         end
     end
 
@@ -166,16 +174,40 @@ if RunService:IsClient() then
     function Axis:AddControllersDeep(Parent :Folder)
         for _, Child :ModuleScript? in pairs(Parent:GetDescendants()) do
             if not Child:IsA("ModuleScript") then continue end
-            Axis.ControllerSystem:Add(Child)
+            Axis._ControllerSystem:Add(Child)
         end
     end
 
     --[=[
         Wrapper function for controller system function
         @client
+
+        ```lua
+        local MyController = Axis.CreateController {
+            Name = "MyController";
+        }
+
+        function MyController:Init()
+            print("Init")
+        end
+
+        function MyController:Start()
+            print("Start")
+        end
+
+        return MyController
+        ```
     ]=]
     function Axis.CreateController(ControllerDef :Types.ControllerDefinition) :Types.Controller
-        return Axis.ControllerSystem.CreateController(ControllerDef)
+        return Axis._ControllerSystem.CreateController(ControllerDef)
+    end
+
+    --[=[
+        Wrapper function for controller system
+        @client
+    ]=]
+    function Axis.GetController(Name :string) :Types.Controller
+        return Axis._ControllerSystem.GetController(Name)
     end
 end
 
@@ -186,7 +218,7 @@ Start core systems and initialize all core modules
 ]=]
 function Axis:Boot()
     return Axis.Promise.new(function(Resolve, Reject)
-        local Success = Axis.Bootstrap:BootSequence()
+        local Success = Axis._Bootstrap:BootSequence()
         if not Success then
             Reject("Failed to boot")
         end
