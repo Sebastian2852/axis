@@ -16,8 +16,10 @@ classes = [
 [[classOrder]]
 section = "Core"
 classes = [
-    "Bootstrap",
+    "ServerBootstrap",
+    "ClientBootstrap",
     "ModuleSystem",
+    "ControllerSystem",
     "EventSystem",
 ]
 

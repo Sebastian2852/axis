@@ -8,8 +8,6 @@ export type PlayerConfigTable = {
 }
 
 --[=[
-    What a .CreateModule returns
-
     @within ModuleSystem
     @interface ModuleDefinition
     .Name string
@@ -32,6 +30,28 @@ export type ModuleDefinition = {
 export type Module = {
     Name :string;
     Client :{any};
+    [any] :any;
+}
+
+--[=[
+    @within ControllerSystem
+    @interface ControllerDefinition
+    .Name string
+    .[any] any
+]=]
+export type ControllerDefinition = {
+    Name :string;
+    [any] :any;
+}
+
+--[=[
+    @within ControllerSystem
+    @interface Controller
+    .Name string
+    .[any] any
+]=]
+export type Controller = {
+    Name :string;
     [any] :any;
 }
 

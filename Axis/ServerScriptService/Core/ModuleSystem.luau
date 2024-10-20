@@ -17,6 +17,7 @@ ModuleSystem.Modules = {}
 
 --[=[
     Add a module to the module list
+    @param ModuleScript ModuleScript
 ]=]
 function ModuleSystem:Add(ModuleScript :ModuleScript)
     require(ModuleScript)
@@ -68,7 +69,7 @@ function ModuleSystem:Start()
             end
         end
         Resolve(Promise.all(ModuleInitPromises))
-    end):andThen(function(Resolve)
+    end):andThen(function()
         for _, Module in ModuleSystem.Modules do
             if type(Module.Start) == "function" then
                 task.spawn(function()
@@ -81,16 +82,16 @@ function ModuleSystem:Start()
 end
 
 --[=[
-    Returns the service with that name
+    Returns the module with that name
 
     @return Module
 
     @error "Name must be a string" -- The passed name is not a string
-    @error "Could not find service ..." -- A service does not exist with the passed name
+    @error "Could not find module ..." -- A module does not exist with the passed name
 ]=]
 function ModuleSystem.GetModule(Name :string) :Types.Module
     assert(type(Name) == "string", "Name must be a string")
-    return assert(ModuleSystem.Modules[Name], `Could not find service "{Name}"`) :: Types.Module
+    return assert(ModuleSystem.Modules[Name], `Could not find module "{Name}"`) :: Types.Module
 end
 
 return ModuleSystem

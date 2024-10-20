@@ -1,20 +1,23 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 --[=[
-    @class Bootstrap
+    @class ServerBootstrap
+    @server
 
     Internal module only to be used by Axis itself
 ]=]
-local Bootstrap = {}
+local ServerBootstrap = {}
 
 local EventSystem = require(ReplicatedStorage.Axis.Core.EventSystem)
 local PlayerConfig = require(ReplicatedStorage.Axis.Configs.PlayerConfig)
+local ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
 
 --[=[
     All Axis core objects like events are created, this sets all roblox related properties and setups up anthing roblox-wise
 
     @return bool -- Was the phase successful
 ]=]
-function Bootstrap:PhaseOne() :boolean
+function ServerBootstrap:PhaseOne() :boolean
     EventSystem.NewEvent("BootFinished")
     EventSystem.NewEvent("BootPhaseTwo")
     return true
@@ -25,28 +28,11 @@ end
 
     @return bool -- Was the phase successful
 ]=]
-function Bootstrap:PhaseTwo() :boolean
+function ServerBootstrap:PhaseTwo() :boolean
     game.Players.PlayerAdded:Connect(function(Player)
-        Bootstrap:ApplyPlayerConfig(Player)
+        ServerBootstrap:ApplyPlayerConfig(Player)
         Player.CharacterAdded:Connect(function()
-            Bootstrap:ApplyCharacterConfig(Player)
-        end)
-    end)
-
-    EventSystem:FireEvent("BootPhaseTwo")
-    return true
-end
-
---[=[
-    Initializes and Starts all modules added to by the developer
-
-    @return bool -- Was the phase successful
-]=]
-function Bootstrap:PhaseThree() :boolean
-    game.Players.PlayerAdded:Connect(function(Player)
-        Bootstrap:ApplyPlayerConfig(Player)
-        Player.CharacterAdded:Connect(function()
-            Bootstrap:ApplyCharacterConfig(Player)
+            ServerBootstrap:ApplyCharacterConfig(Player)
         end)
     end)
 
@@ -59,7 +45,7 @@ end
 
     @param Player Player
 ]=]
-function Bootstrap:ApplyPlayerConfig(Player :Player)
+function ServerBootstrap:ApplyPlayerConfig(Player :Player)
     local CurrentConfig = PlayerConfig:ReturnAsTable()
 
     if CurrentConfig.LockFirstPerson then
@@ -77,7 +63,7 @@ end
 
     @error "Player currently doesn't have a character" -- Error happens when the function is called but the player's character does not yet exist
 ]=]
-function Bootstrap:ApplyCharacterConfig(Player :Player)
+function ServerBootstrap:ApplyCharacterConfig(Player :Player)
     local CurrentConfig = PlayerConfig:ReturnAsTable()
     local Character = Player.Character
     if not Character then
@@ -94,11 +80,11 @@ Executes all the phases in order
 
 @return bool
 ]=]
-function Bootstrap:BootSequence() :boolean
-    local PhaseOne = Bootstrap:PhaseOne()
-    local PhaseTwo = Bootstrap:PhaseTwo()
-    local PhaseThree = Bootstrap:PhaseThree()
-    return PhaseOne and PhaseTwo and PhaseThree
+function ServerBootstrap:BootSequence() :boolean
+    local PhaseOne = ServerBootstrap:PhaseOne()
+    local PhaseTwo = ServerBootstrap:PhaseTwo()
+    ModuleSystem:Start()
+    return PhaseOne and PhaseTwo
 end
 
-return Bootstrap
+return ServerBootstrap

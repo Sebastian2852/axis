@@ -19,7 +19,7 @@
       },
 
       "Test":{
-        "$path": "Game/ServerScriptService"
+        "$path": "Test/ServerScriptService"
       }
     },
 
@@ -30,7 +30,7 @@
         },
 
         "Test":{
-          "$path": "Game/StarterPlayerScripts"
+          "$path": "Test/StarterPlayerScripts"
         }
       }
     }

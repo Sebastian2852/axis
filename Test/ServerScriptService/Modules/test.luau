@@ -16,10 +16,10 @@ end
 
 function test:Start()
     print("Start")
-    local RandomObject = Axis.Lib.Random.new()
-    print(RandomObject:GenerateInteger(5, 10)) -- Generate a random number between 5 and 10
-    print(RandomObject:GenerateIntegers(50, 5, 10)) -- Generate 50 random numbers between 5 and 10
-    RandomObject:Destroy()
+end
+
+function test.Client:TestClientComm()
+    print("CLIENT COMM :O")
 end
 
 return test

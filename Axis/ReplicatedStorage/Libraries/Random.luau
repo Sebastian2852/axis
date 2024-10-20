@@ -98,13 +98,6 @@ function RandomLib:ResetSeed(Seed :number?)
     self._Object = Random.new(Seed)
 end
 
---[=[
-    Delete all data held by the instance
-]=]
-function RandomLib:Destroy()
-    self._Object = nil
-end
-
 
 return RandomLib
 

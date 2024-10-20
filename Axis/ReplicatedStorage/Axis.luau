@@ -35,14 +35,14 @@ Axis.EventSystem = require(script.Parent.Core.EventSystem)
 ]=]
 Axis.Promise = require(ReplicatedStorage.Packages.Promise)
 
+--[=[
+    @within Axis
+    @prop Bootstrap Bootstrap
+    @private
+]=]
+Axis.Bootstrap = require(ReplicatedStorage.Axis.Core.Bootstrapper)
+
 if RunService:IsServer() then
-    --[=[
-        @within Axis
-        @prop Bootstrap Bootstrap
-        @server
-        @private
-    ]=]
-    Axis.Bootstrap = require(ServerScriptService.Axis.Kernel.Bootstrapper)
 
     --[=[
         @within Axis
@@ -54,11 +54,7 @@ if RunService:IsServer() then
     Axis.ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
 
     --[=[
-        Adds a module to Axis. This lets other modules use it awell as the client.
-
-        ```lua
-        Axis:AddModule(Somwhere.Module)
-        ```
+        Wrapper function for module system function
 
         @server
     ]=]
@@ -70,6 +66,7 @@ if RunService:IsServer() then
         Adds the modules within the parent.
 
         @param Parent Folder
+        @server
 
         :::caution
         This only adds children, use AddModulesDeep to add descendants
@@ -86,6 +83,7 @@ if RunService:IsServer() then
         Adds any modules within the parent folder, this includes in sub-folders
 
         @param Parent Folder
+        @server
     ]=]
     function Axis:AddModulesDeep(Parent :Folder)
         for _, Child :ModuleScript? in pairs(Parent:GetDescendants()) do
@@ -124,6 +122,63 @@ if RunService:IsServer() then
     end
 end
 
+if RunService:IsClient() then
+    --[=[
+        @within Axis
+        @prop ControllerSystem ControllerSystem
+        @client
+        @private
+        @readonly
+    ]=]
+    Axis.ControllerSystem = require(ReplicatedStorage.Axis.Core.ControllerSystem)
+
+    --[=[
+        Wrapper function for controller system function
+        @client
+    ]=]
+    function Axis:AddController(ControllerScript :ModuleScript)
+        return Axis.ControllerSystem:Add(ControllerScript)
+    end
+
+    --[=[
+        Adds the controllers within the parent.
+
+        @param Parent Folder
+        @client
+
+        :::caution
+        This only adds children, use AddControllersDeep to add descendants
+        :::
+    ]=]
+    function Axis:AddControllers(Parent :Folder)
+        for _, Child :ModuleScript? in pairs(Parent:GetChildren()) do
+            if not Child:IsA("ModuleScript") then continue end
+            Axis.ControllerSystem:Add(Child)
+        end
+    end
+
+    --[=[
+        Adds any controllers within the parent folder, this includes in sub-folders
+
+        @param Parent Folder
+        @client
+    ]=]
+    function Axis:AddControllersDeep(Parent :Folder)
+        for _, Child :ModuleScript? in pairs(Parent:GetDescendants()) do
+            if not Child:IsA("ModuleScript") then continue end
+            Axis.ControllerSystem:Add(Child)
+        end
+    end
+
+    --[=[
+        Wrapper function for controller system function
+        @client
+    ]=]
+    function Axis.CreateController(ControllerDef :Types.ControllerDefinition) :Types.Controller
+        return Axis.ControllerSystem.CreateController(ControllerDef)
+    end
+end
+
 --[=[
 Start core systems and initialize all core modules
 
@@ -136,7 +191,6 @@ function Axis:Boot()
             Reject("Failed to boot")
         end
 
-        Axis.ModuleSystem:Start()
         Resolve()
     end)
 end
