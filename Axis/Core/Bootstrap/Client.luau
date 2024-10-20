@@ -14,6 +14,11 @@ local ControllerSystem = require(script.Parent.Parent.ControllerSystem)
     @return boolean
 ]=]
 function ClientBootstrap:BootSequence() :boolean
+    for _, Module in pairs(script.Parent.Parent.Parent.Controllers:GetDescendants()) do
+        if not Module:IsA("ModuleScript") then continue end
+        ControllerSystem:Add(Module)
+    end
+
     ControllerSystem:Start()
     return true
 end

@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 --[=[
@@ -202,6 +203,14 @@ if RunService:IsServer() then
 end
 
 if RunService:IsClient() then
+    --[=[
+        @within Axis
+        @prop Player Player
+        @client
+        @readonly
+    ]=]
+    Axis.Player = Players.LocalPlayer
+
     --[=[
         @within Axis
         @prop ControllerSystem ControllerSystem

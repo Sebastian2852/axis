@@ -23,6 +23,12 @@ classes = [
     "EventSystem",
 ]
 
+[[classOrder]]
+section = "Controllers"
+classes = [
+    "PlayerController"
+]
+
 gitSourceBranch = "Main"
 
 [footer]

@@ -10,6 +10,20 @@
         },
         "$path":"Packages"
       }
+    },
+
+    "ServerScriptService": {
+      "Test":{
+        "$path": "Test/ServerScriptService"
+      }
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts":{
+        "Test":{
+          "$path": "Test/StarterPlayerScripts"
+        }
+      }
     }
   }
 }

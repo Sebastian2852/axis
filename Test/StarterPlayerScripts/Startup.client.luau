@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Axis = require(ReplicatedStorage.Axis)
+local Axis = require(ReplicatedStorage.Packages.Axis)
 
 local MyController = Axis.CreateController {
     Name = "MyController";

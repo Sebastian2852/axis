@@ -83,6 +83,12 @@ Executes all the phases in order
 function ServerBootstrap:BootSequence() :boolean
     local PhaseOne = ServerBootstrap:PhaseOne()
     local PhaseTwo = ServerBootstrap:PhaseTwo()
+
+    for _, Module in pairs(script.Parent.Parent.Parent.Modules:GetDescendants()) do
+        if not Module:IsA("ModuleScript") then continue end
+        ModuleSystem:Add(Module)
+    end
+
     ModuleSystem:Start()
     return PhaseOne and PhaseTwo
 end
