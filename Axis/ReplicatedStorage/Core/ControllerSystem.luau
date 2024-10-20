@@ -9,8 +9,29 @@ local ControllerSystem = {}
 
 local Types = require(ReplicatedStorage.Axis.Core.Types)
 local Promise = require(ReplicatedStorage.Packages.Promise)
+local Comm = require(ReplicatedStorage.Packages.Comm)
 
+local ModulesFolder = nil
+
+ControllerSystem.Modules = {}
 ControllerSystem.Controllers = {}
+
+local function GetModulesFolder()
+    if not ModulesFolder then
+        ModulesFolder = ReplicatedStorage.Axis.Storage.Modules :: Folder
+    end
+
+    return ModulesFolder
+end
+
+local function BuildModule(Name :string)
+    local Folder = GetModulesFolder()
+    local ClientComm = Comm.ClientComm.new(Folder, true, Name)
+    local Module = ClientComm:BuildObject(nil, nil)
+
+    ControllerSystem.Modules[Name] = Module
+    return Module
+end
 
 --[=[
     Add a controller
@@ -86,6 +107,20 @@ end
 function ControllerSystem.GetController(Name :string) :Types.Controller
     assert(type(Name) == "string", "Name must be a string")
     return assert(ControllerSystem.Controllers[Name], `Could not find controller "{Name}"`) :: Types.Controller
+end
+
+--[=[
+    Get a Module with the given name
+    @param Name string
+    @return Module
+]=]
+function ControllerSystem.GetModule(Name :string) :Types.Module
+    local Module = ControllerSystem.Modules[Name]
+    if Module then
+        return Module
+    end
+
+    return BuildModule(Name)
 end
 
 return ControllerSystem

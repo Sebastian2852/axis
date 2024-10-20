@@ -1,3 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Comm = require(ReplicatedStorage.Packages.Comm)
+
 --[=[
     @within PlayerConfig
     @type PlayerConfigTable {DefaultWalkSpeed: number, LockFirstPerson: boolean}
@@ -25,11 +28,13 @@ export type ModuleDefinition = {
     @interface Module
     .Name string
     .Client table?
+    .AxisNetworking any
     .[any] any
     ]=]
 export type Module = {
     Name :string;
     Client :{any};
+    AxisNetworking :any;
     [any] :any;
 }
 

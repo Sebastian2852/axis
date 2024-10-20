@@ -42,6 +42,18 @@ Axis.Promise = require(ReplicatedStorage.Packages.Promise)
 ]=]
 Axis._Bootstrap = require(ReplicatedStorage.Axis.Core.Bootstrapper)
 
+--[=[
+    Returns the module with that name
+    @return Module
+]=]
+function Axis.GetModule(Name :string) :Types.Module
+    if RunService:IsServer() then
+        return Axis._ModuleSystem.GetModule(Name)
+    else
+        return Axis._ControllerSystem.GetModule(Name)
+    end
+end
+
 if RunService:IsServer() then
 
     --[=[
@@ -52,6 +64,10 @@ if RunService:IsServer() then
         @readonly
     ]=]
     Axis._ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
+
+    local SIGNAL_MARKER = Axis._ModuleSystem.SIGNAL_MARKER
+    local PROPERTY_MARKER = Axis._ModuleSystem.PROPERTY_MARKER
+    local UNRELIABLE_SIGNAL_MARKER = Axis._ModuleSystem.UNRELIABLE_SIGNAL_MARKER
 
     --[=[
         Wrapper function for module system function
@@ -122,11 +138,67 @@ if RunService:IsServer() then
     end
 
     --[=[
-        Wrapper function for module system
-        @server
+        @return SIGNAL_MARKER
+
+        Creates a marker that will turn the key into a remote signal once Axis
+        is booted
+
+        ```lua
+        local MyModule = Axis.CreateModule {
+            Name = "MyModule";
+            Client = {
+                -- Create the signal marker, which will turn into a
+                -- RemoteSignal when Axis.Start() is called:
+                MySignal = Axis.CreateSignal();
+            };
+        }
+        ```
     ]=]
-    function Axis.GetModule(Name :string) :Types.Controller
-        return Axis._ModuleSystem.GetModule(Name)
+    function Axis.CreateSignal()
+        return SIGNAL_MARKER
+    end
+
+    --[=[
+        @return UNRELIABLE_SIGNAL_MARKER
+
+        Creates a marker that will turn the key into a unreliable remote signal
+        once Axis is booted.
+
+        :::warning Unreliable Events
+        Internally, this uses UnreliableRemoteEvents, which allows for
+        network communication that is unreliable and unordered. This is
+        useful for events that are not crucial for gameplay, since the
+        delivery of the events may occur out of order or not at all.
+
+        See  the documentation for [UnreliableRemoteEvents](https://create.roblox.com/docs/reference/engine/classes/UnreliableRemoteEvent)
+        for more info.
+        :::
+    ]=]
+    function Axis.CreateUnreliableSignal()
+        return UNRELIABLE_SIGNAL_MARKER
+    end
+
+    --[=[
+        @return PROPERTY_MARKER
+        Returns a marker that will turn the key into a remote property
+        one Axis is booted. An initial value can be passed.
+
+        RemoteProperties are great for replicating data to all of
+        the clients. Different data can also be set per client.
+
+        ```lua
+        local MyModule = Axis.CreateModule {
+            Name = "MyModule",
+            Client = {
+                -- Create the property marker, which will turn into a
+                -- RemoteProperty when Axis.Start() is called:
+                MyProperty = Axis.CreateProperty("HelloWorld"),
+            },
+        }
+        ```
+    ]=]
+    function Axis.CreateProperty(InitialValue :any)
+        return {PROPERTY_MARKER, InitialValue}
     end
 end
 
@@ -181,6 +253,7 @@ if RunService:IsClient() then
     --[=[
         Wrapper function for controller system function
         @client
+        @return Controller
 
         ```lua
         local MyController = Axis.CreateController {
@@ -205,6 +278,7 @@ if RunService:IsClient() then
     --[=[
         Wrapper function for controller system
         @client
+        @return Controller
     ]=]
     function Axis.GetController(Name :string) :Types.Controller
         return Axis._ControllerSystem.GetController(Name)
@@ -212,9 +286,8 @@ if RunService:IsClient() then
 end
 
 --[=[
-Start core systems and initialize all core modules
-
-@return boolean -- Was boot successful
+    Start core systems and initialize all core modules
+    @return boolean -- Was boot successful
 ]=]
 function Axis:Boot()
     return Axis.Promise.new(function(Resolve, Reject)

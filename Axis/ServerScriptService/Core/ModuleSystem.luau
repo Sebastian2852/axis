@@ -8,6 +8,16 @@ local ModuleSystem = {}
 
 local Types = require(ReplicatedStorage.Axis.Core.Types)
 local Promise = require(ReplicatedStorage.Packages.Promise)
+local Comm = require(ReplicatedStorage.Packages.Comm)
+
+
+local SIGNAL_MARKER = newproxy(true)
+local UNRELIABLE_SIGNAL_MARKER  = newproxy(true)
+local PROPERTY_MARKER = newproxy(true)
+
+ModuleSystem.SIGNAL_MARKER = SIGNAL_MARKER
+ModuleSystem.UNRELIABLE_SIGNAL_MARKER = UNRELIABLE_SIGNAL_MARKER
+ModuleSystem.PROPERTY_MARKER = PROPERTY_MARKER
 
 --[=[
     @within ModuleSystem
@@ -47,7 +57,17 @@ end
 function ModuleSystem.Create(ModuleDef :Types.ModuleDefinition) :Types.Module
     assert(not ModuleSystem:Exists(ModuleDef.Name), "Module already exists")
 
-    local Module = ModuleDef
+    local Module :Types.Module = ModuleDef
+    Module.AxisNetworking = Comm.ServerComm.new(ReplicatedStorage.Axis.Storage.Modules, ModuleDef.Name)
+
+    if type(Module.Client) ~= "table" then
+        Module.Client = { Server = Module }
+    else
+        if Module.Client.Server ~= Module then
+            Module.Client.Server = Module
+        end
+    end
+
     ModuleSystem.Modules[ModuleDef.Name] = Module
     return Module
 end
@@ -59,6 +79,20 @@ end
 ]=]
 function ModuleSystem:Start()
     return Promise.new(function(Resolve)
+        for _, Module :Types.Module in ModuleSystem.Modules do
+            for Key, Value in Module.Client do
+                if type(Value) == "function" then
+                    Module.AxisNetworking:WrapMethod(Module.Client, Key, nil, nil)
+                elseif Value == SIGNAL_MARKER then
+                    Module.Client[Key] = Module.AxisNetworking:CreateSignal(Key, false, nil, nil)
+                elseif Value == UNRELIABLE_SIGNAL_MARKER then
+                    Module.Client[Key] = Module.AxisNetworking:CreateSignal(Key, true, nil, nil)
+                elseif type(Value) == "table" and Value[1] == PROPERTY_MARKER then
+                    Module.Client[Key] = Module.AxisNetworking:CreateProperty(Key, Value[2], nil, nil)
+                end
+            end
+        end
+
         local ModuleInitPromises = {}
         for _, Module in ModuleSystem.Modules do
             if type(Module.Init) == "function" then

@@ -1,11 +1,27 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Axis = require(ReplicatedStorage.Axis.Axis)
 
-Axis:AddControllersDeep(script.Parent.Controllers)
+local MyController = Axis.CreateController {
+    Name = "MyController";
+}
+
+function MyController:Init()
+    local MyModule = Axis.GetModule("MyModule")
+    MyModule.TestEvent:Connect(function(Message)
+        print("Got message from server:", Message)
+    end)
+
+    MyModule.TestEvent:Fire("Hello")
+
+    MyModule:TestMethod("Hello world from client"):andThen(function(Result)
+        print("Result from server:", Result)
+    end)
+
+    MyModule.TestProperty:Observe(function(Value)
+        print("TestProperty value:", Value)
+    end)
+end
 
 Axis:Boot():andThen(function()
     print("Axis booted")
-
-    local Test = Axis.GetController("Test")
-    Test:Foo()
 end):catch(warn)
