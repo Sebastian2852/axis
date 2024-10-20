@@ -1,6 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Comm = require(ReplicatedStorage.Packages.Comm)
-
 --[=[
     @within PlayerConfig
     @type PlayerConfigTable {DefaultWalkSpeed: number, LockFirstPerson: boolean}

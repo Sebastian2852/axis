@@ -7,9 +7,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 ]=]
 local ControllerSystem = {}
 
-local Types = require(ReplicatedStorage.Axis.Core.Types)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local Comm = require(ReplicatedStorage.Packages.Comm)
+local Types = require(script.Parent.Types)
+local Promise = require(script.Parent.Parent.Parent.Promise)
+local Comm = require(script.Parent.Parent.Parent.Comm)
 
 local ModulesFolder = nil
 
@@ -18,7 +18,7 @@ ControllerSystem.Controllers = {}
 
 local function GetModulesFolder()
     if not ModulesFolder then
-        ModulesFolder = ReplicatedStorage.Axis.Storage.Modules :: Folder
+        ModulesFolder = script.Parent.Parent.Storage.Modules :: Folder
     end
 
     return ModulesFolder

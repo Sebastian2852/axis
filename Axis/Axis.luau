@@ -1,13 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local ServerScriptService = game:GetService("ServerScriptService")
 --[=[
     @class Axis
     The global axis module, contains everthing axis has to offer.
 ]=]
 local Axis = {}
 
-local Types = require(ReplicatedStorage.Axis.Core.Types)
+local Types = require(script.Parent.Core.Types)
 
 --[=[
     Contains all the custom libraries axis provides
@@ -33,14 +32,14 @@ Axis.EventSystem = require(script.Parent.Core.EventSystem)
     @prop Promise Promise
     @readonly
 ]=]
-Axis.Promise = require(ReplicatedStorage.Packages.Promise)
+Axis.Promise = require(script.Parent.Parent.Promise)
 
 --[=[
     @within Axis
     @prop Bootstrap Bootstrap
     @private
 ]=]
-Axis._Bootstrap = require(ReplicatedStorage.Axis.Core.Bootstrapper)
+Axis._Bootstrap = require(script.Parent.Core.Bootstrapper)
 
 --[=[
     Returns the module with that name
@@ -63,7 +62,7 @@ if RunService:IsServer() then
         @private
         @readonly
     ]=]
-    Axis._ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
+    Axis._ModuleSystem = require(script.Parent.Core.ModuleSystem)
 
     local SIGNAL_MARKER = Axis._ModuleSystem.SIGNAL_MARKER
     local PROPERTY_MARKER = Axis._ModuleSystem.PROPERTY_MARKER
@@ -210,7 +209,7 @@ if RunService:IsClient() then
         @private
         @readonly
     ]=]
-    Axis._ControllerSystem = require(ReplicatedStorage.Axis.Core.ControllerSystem)
+    Axis._ControllerSystem = require(script.Parent.Core.ControllerSystem)
 
     --[=[
         Wrapper function for controller system function

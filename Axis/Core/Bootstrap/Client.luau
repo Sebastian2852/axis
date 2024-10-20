@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 ]=]
 local ClientBootstrap = {}
 
-local ControllerSystem = require(ReplicatedStorage.Axis.Core.ControllerSystem)
+local ControllerSystem = require(script.Parent.Parent.ControllerSystem)
 
 --[=[
     Start up all client-related parts of Axis

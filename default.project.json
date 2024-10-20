@@ -4,30 +4,11 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "Axis": {
-        "$path": "Axis/ReplicatedStorage"
-      },
-
       "Packages":{
+        "Axis": {
+          "$path": "Axis"
+        },
         "$path":"Packages"
-      }
-    },
-
-    "ServerScriptService": {
-      "Axis": {
-        "$path": "Axis/ServerScriptService"
-      },
-
-      "Test":{
-        "$path": "Test/ServerScriptService"
-      }
-    },
-
-    "StarterPlayer": {
-      "StarterPlayerScripts": {
-        "Test":{
-          "$path": "Test/StarterPlayerScripts"
-        }
       }
     }
   }

@@ -8,9 +8,9 @@ local ServerScriptService = game:GetService("ServerScriptService")
 ]=]
 local ServerBootstrap = {}
 
-local EventSystem = require(ReplicatedStorage.Axis.Core.EventSystem)
-local PlayerConfig = require(ReplicatedStorage.Axis.Configs.PlayerConfig)
-local ModuleSystem = require(ServerScriptService.Axis.Core.ModuleSystem)
+local EventSystem = require(script.Parent.Parent.EventSystem)
+local PlayerConfig = require(script.Parent.Parent.Parent.Configs.PlayerConfig)
+local ModuleSystem = require(script.Parent.Parent.ModuleSystem)
 
 --[=[
     All Axis core objects like events are created, this sets all roblox related properties and setups up anthing roblox-wise

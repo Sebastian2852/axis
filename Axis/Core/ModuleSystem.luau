@@ -6,13 +6,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 ]=]
 local ModuleSystem = {}
 
-local Types = require(ReplicatedStorage.Axis.Core.Types)
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local Comm = require(ReplicatedStorage.Packages.Comm)
+local Types = require(script.Parent.Types)
+local Promise = require(script.Parent.Parent.Parent.Promise)
+local Comm = require(script.Parent.Parent.Parent.Comm)
 
 
 local SIGNAL_MARKER = newproxy(true)
-local UNRELIABLE_SIGNAL_MARKER  = newproxy(true)
+local UNRELIABLE_SIGNAL_MARKER = newproxy(true)
 local PROPERTY_MARKER = newproxy(true)
 
 ModuleSystem.SIGNAL_MARKER = SIGNAL_MARKER
@@ -58,7 +58,7 @@ function ModuleSystem.Create(ModuleDef :Types.ModuleDefinition) :Types.Module
     assert(not ModuleSystem:Exists(ModuleDef.Name), "Module already exists")
 
     local Module :Types.Module = ModuleDef
-    Module.AxisNetworking = Comm.ServerComm.new(ReplicatedStorage.Axis.Storage.Modules, ModuleDef.Name)
+    Module.AxisNetworking = Comm.ServerComm.new(script.Parent.Parent.Storage.Modules, ModuleDef.Name)
 
     if type(Module.Client) ~= "table" then
         Module.Client = { Server = Module }

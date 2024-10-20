@@ -1,4 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 --[=[
     @class EventSystem
@@ -25,7 +24,7 @@ function EventSystem.NewEvent(EventName :string)
     EventName = ConvertName(EventName)
     local Holder = Instance.new("Folder")
     Holder.Name = EventName
-    Holder.Parent = ReplicatedStorage.Axis.Storage.Events
+    Holder.Parent = script.Parent.Parent.Storage.Events
 
     local RemoteEvent = Instance.new("RemoteEvent")
     RemoteEvent.Name = "RE"
@@ -48,7 +47,7 @@ end
 ]=]
 function EventSystem:OnEvent(EventName :string) :RBXScriptSignal
     EventName = ConvertName(EventName)
-    local HolderFolder = ReplicatedStorage.Axis.Storage.Events:FindFirstChild(EventName)
+    local HolderFolder = script.Parent.Parent.Storage.Events:FindFirstChild(EventName)
     if not HolderFolder then
         error("Invalid name; no holder")
         return
@@ -81,7 +80,7 @@ end
 function EventSystem:FireEvent(EventName :string, ... :any)
     EventName = ConvertName(EventName)
 
-    local HolderFolder = ReplicatedStorage.Axis.Storage.Events:FindFirstChild(EventName)
+    local HolderFolder = script.Parent.Parent.Storage.Events:FindFirstChild(EventName)
     if not HolderFolder then
         error("Invalid name; no holder")
         return

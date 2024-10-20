@@ -1,8 +1,13 @@
 [package]
 name = "sebastian2852/axis"
-version = "0.0.1"
+description = "Framework inspired by Knit"
+version = "0.0.10"
+
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
+
+license = "Apache"
+authors = ["sebastian2852"]
 
 [dependencies]
 Promise = "evaera/promise@4.0.0"
