@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 --[=[
     @class ModuleSystem
+    @server
     Internal module only to be used by Axis itself
 ]=]
 local ModuleSystem = {}

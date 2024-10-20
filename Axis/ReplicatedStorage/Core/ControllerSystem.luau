@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 --[=[
     @class ControllerSystem
+    @client
     Internal system for handling controllers
 ]=]
 local ControllerSystem = {}
