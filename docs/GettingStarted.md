@@ -6,12 +6,37 @@ sidebar_position: 2
 
 ## Installing
 
-It is recommended to use Axis as a git submodule.
-
-### Git submodule
-use the git submodule command to add Axis as a submodule to your game:  
-`git submodule add [GITHUB PATH] Submodules/Axis`  
-Once you have it as a submodule, you can add it to your `default.project.json` to let rojo sync. You can look at the included `default.project.json` file to see what to add to your own project file. Make sure you also have all the dependencies installed (Everything in the `wally.toml` file).
-
 ### Wally
-Axis is available on wally (not very stable atm) [here](https://wally.run/package/sebastian2852/axis).
+Axis is available on Wally (not very stable atm) [here](https://wally.run/package/sebastian2852/axis).
+
+## Using
+
+### Booting
+Booting up axis is as simple as 1 line of code. Keep in mind that axis does need to be booted from the client and the server. Firstly lets boot axis on the server:
+```lua
+-- Startup.server.luau
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Axis = require(ReplicatedStorage.Packages.Axis)
+
+Axis:Boot():andThen(function()
+    print("Axis booted")
+end):catch(warn)
+```
+Pressing play should result with "Axis booted" being printed in the output.
+
+Great we have booted axis from the server, now the client. The process is identical:
+```lua
+-- Startup.client.luau
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Axis = require(ReplicatedStorage.Packages.Axis)
+
+Axis:Boot():andThen(function()
+    print("Axis booted")
+end):catch(warn)
+```
+
+Having both these scripts should result in "Axis booted" being printed from the server and then the client in the output.
+
+### Notes
+- Axis is designed to work only in modules scripts. These 2 "Startup" scripts should be the only normal scripts in your game.
+- Adding anything (like modules or controllers) to axis must come before booting!!!

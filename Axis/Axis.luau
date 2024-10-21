@@ -150,7 +150,7 @@ if RunService:IsServer() then
             Name = "MyModule";
             Client = {
                 -- Create the signal marker, which will turn into a
-                -- RemoteSignal when Axis.Start() is called:
+                -- RemoteSignal when Axis:Boot() is called:
                 MySignal = Axis.CreateSignal();
             };
         }
@@ -193,8 +193,8 @@ if RunService:IsServer() then
             Name = "MyModule",
             Client = {
                 -- Create the property marker, which will turn into a
-                -- RemoteProperty when Axis.Start() is called:
-                MyProperty = Axis.CreateProperty("HelloWorld"),
+                -- RemoteProperty when Axis:Boot() is called:
+                MyProperty = Axis.CreateProperty("HelloWorld");
             },
         }
         ```
