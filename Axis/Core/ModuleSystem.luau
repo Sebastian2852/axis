@@ -27,10 +27,18 @@ ModuleSystem.PROPERTY_MARKER = PROPERTY_MARKER
 ModuleSystem.Modules = {}
 
 --[=[
+    @within ModuleSystem
+    @readonly
+    @prop Started boolean
+]=]
+ModuleSystem.Started = false
+
+--[=[
     Add a module to the module list
     @param ModuleScript ModuleScript
 ]=]
 function ModuleSystem:Add(ModuleScript :ModuleScript)
+    assert(not ModuleSystem.Started, "Cannot add modules after module system start")
     require(ModuleScript)
 end
 
@@ -55,6 +63,10 @@ end
     @return Module
 ]=]
 function ModuleSystem.Create(ModuleDef :Types.ModuleDefinition) :Types.Module
+    assert(not ModuleSystem.Started, "Cannot create modules after module system start")
+    assert(type(ModuleDef) == "table", "Module def must be a table")
+    assert(type(ModuleDef.Name) == "string", `Module name must be a string; got {type(ModuleDef.Name)}`)
+    assert(#ModuleDef.Name > 0, "Module name must be a non-empty string")
     assert(not ModuleSystem:Exists(ModuleDef.Name), "Module already exists")
 
     local Module :Types.Module = ModuleDef
@@ -78,6 +90,8 @@ end
     @return Promise
 ]=]
 function ModuleSystem:Start()
+    ModuleSystem.Started = true
+
     return Promise.new(function(Resolve)
         for _, Module :Types.Module in ModuleSystem.Modules do
             for Key, Value in Module.Client do

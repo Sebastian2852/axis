@@ -16,6 +16,13 @@ local ModulesFolder = nil
 ControllerSystem.Modules = {}
 ControllerSystem.Controllers = {}
 
+--[=[
+    @within ControllerSystem
+    @prop Started boolean
+    @readonly
+]=]
+ControllerSystem.Started = false
+
 local function GetModulesFolder()
     if not ModulesFolder then
         ModulesFolder = script.Parent.Parent.Storage.Modules :: Folder
@@ -38,6 +45,7 @@ end
     @param ControllerScript ModuleScript
 ]=]
 function ControllerSystem:Add(ControllerScript :ModuleScript)
+    assert(not ControllerSystem.Started, "Cannot create Controllers after ControllerSystem start")
     require(ControllerScript)
 end
 
@@ -48,7 +56,10 @@ end
     @return Controller
 ]=]
 function ControllerSystem.CreateController(ControllerDef :Types.ControllerDefinition) :Types.Controller
+    assert(not ControllerSystem.Started, "Cannot create Controllers after ControllerSystem start")
     assert(type(ControllerDef) == "table", "Controller def must be a table")
+    assert(type(ControllerDef.Name) == "string", `Controller name must be a string; got {type(ControllerDef.Name)}`)
+    assert(#ControllerDef.Name > 0, "Controller name must be a non-empty string")
     assert(not ControllerSystem:Exists(ControllerDef.Name), "Controller already exists")
 
     local Controller = ControllerDef
@@ -75,6 +86,8 @@ end
     @private
 ]=]
 function ControllerSystem:Start()
+    ControllerSystem.Started = true
+
     return Promise.new(function(Resolve)
         local ModuleInitPromises = {}
         for _, Module in ControllerSystem.Controllers do
