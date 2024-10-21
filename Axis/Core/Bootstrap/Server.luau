@@ -8,37 +8,8 @@ local ServerScriptService = game:GetService("ServerScriptService")
 ]=]
 local ServerBootstrap = {}
 
-local EventSystem = require(script.Parent.Parent.EventSystem)
 local PlayerConfig = require(script.Parent.Parent.Parent.Configs.PlayerConfig)
 local ModuleSystem = require(script.Parent.Parent.ModuleSystem)
-
---[=[
-    All Axis core objects like events are created, this sets all roblox related properties and setups up anthing roblox-wise
-
-    @return bool -- Was the phase successful
-]=]
-function ServerBootstrap:PhaseOne() :boolean
-    EventSystem.NewEvent("BootFinished")
-    EventSystem.NewEvent("BootPhaseTwo")
-    return true
-end
-
---[=[
-    Any roblox functions/events are connected with functions.
-
-    @return bool -- Was the phase successful
-]=]
-function ServerBootstrap:PhaseTwo() :boolean
-    game.Players.PlayerAdded:Connect(function(Player)
-        ServerBootstrap:ApplyPlayerConfig(Player)
-        Player.CharacterAdded:Connect(function()
-            ServerBootstrap:ApplyCharacterConfig(Player)
-        end)
-    end)
-
-    EventSystem:FireEvent("BootPhaseTwo")
-    return true
-end
 
 --[=[
     Applies the current player config to the given player
@@ -46,7 +17,7 @@ end
     @param Player Player
 ]=]
 function ServerBootstrap:ApplyPlayerConfig(Player :Player)
-    local CurrentConfig = PlayerConfig:ReturnAsTable()
+    local CurrentConfig = PlayerConfig:GetConfig()
 
     if CurrentConfig.LockFirstPerson then
         Player.CameraMode = Enum.CameraMode.LockFirstPerson
@@ -64,7 +35,7 @@ end
     @error "Player currently doesn't have a character" -- Error happens when the function is called but the player's character does not yet exist
 ]=]
 function ServerBootstrap:ApplyCharacterConfig(Player :Player)
-    local CurrentConfig = PlayerConfig:ReturnAsTable()
+    local CurrentConfig = PlayerConfig:GetConfig()
     local Character = Player.Character
     if not Character then
         error("Player currently doesn't have a character")
@@ -81,8 +52,12 @@ Executes all the phases in order
 @return bool
 ]=]
 function ServerBootstrap:BootSequence() :boolean
-    local PhaseOne = ServerBootstrap:PhaseOne()
-    local PhaseTwo = ServerBootstrap:PhaseTwo()
+    game.Players.PlayerAdded:Connect(function(Player)
+        ServerBootstrap:ApplyPlayerConfig(Player)
+        Player.CharacterAdded:Connect(function()
+            ServerBootstrap:ApplyCharacterConfig(Player)
+        end)
+    end)
 
     for _, Module in pairs(script.Parent.Parent.Parent.Modules:GetDescendants()) do
         if not Module:IsA("ModuleScript") then continue end
@@ -90,7 +65,7 @@ function ServerBootstrap:BootSequence() :boolean
     end
 
     ModuleSystem:Start()
-    return PhaseOne and PhaseTwo
+    return true
 end
 
 return ServerBootstrap

@@ -16,15 +16,7 @@ local Types = require(script.Parent.Core.Types)
     @readonly
 ]=]
 Axis.Lib = {}
-
 Axis.Lib.Random = require(script.Parent.Libraries.Random)
-
---[=[
-    @within Axis
-    @prop EventSystem EventSystem
-    @readonly
-]=]
-Axis.EventSystem = require(script.Parent.Core.EventSystem)
 
 --[=[
     External promise library
@@ -55,6 +47,16 @@ function Axis.GetModule(Name :string) :Types.Module
 end
 
 if RunService:IsServer() then
+
+    --[=[
+        Contains all the configs
+        @within Axis
+        @prop ServerConfigs {PlayerConfig: PlayerConfig}
+        @readonly
+        @server
+    ]=]
+    Axis.ServerConfigs = {}
+    Axis.ServerConfigs.PlayerConfig = require(script.Parent.Configs.PlayerConfig)
 
     --[=[
         @within Axis
