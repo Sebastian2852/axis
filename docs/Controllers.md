@@ -31,6 +31,10 @@ Make sure to **optimize the `Init` function** to run as quickly as possible. Any
 
 Since all `Init` functions need to complete before any `Start` functions are called, **avoid using blocking or yielding operations** in `Init`, as they can significantly delay the startup process.
 
+:::danger 
+The Controller's :Start() and :Init() functions are "removed" once Axis is booted. So calling the `Start` or `Init` functions will error!
+:::
+
 ## Adding controllers to Axis
 
 Like with modules you should have your controllers in a single folder to easily add it to Axis. Just like modules they need to be added before you call `Axis:Boot()`.

@@ -93,6 +93,7 @@ function ModuleSystem:Start()
     ModuleSystem.Started = true
 
     return Promise.new(function(Resolve)
+        -- Bind remotes
         for _, Module :Types.Module in ModuleSystem.Modules do
             for Key, Value in Module.Client do
                 if type(Value) == "function" then
@@ -107,6 +108,7 @@ function ModuleSystem:Start()
             end
         end
 
+        -- Init all modules
         local ModuleInitPromises = {}
         for _, Module in ModuleSystem.Modules do
             if type(Module.Init) == "function" then
@@ -119,12 +121,32 @@ function ModuleSystem:Start()
         end
         Resolve(Promise.all(ModuleInitPromises))
     end):andThen(function()
+        -- Start all modules
         for _, Module in ModuleSystem.Modules do
             if type(Module.Start) == "function" then
                 task.spawn(function()
                     debug.setmemorycategory("AXIS_MODULESTART_"..Module.Name)
                     Module:Start()
                 end)
+            end
+        end
+    end):andThen(function()
+        -- Remove start and init functions
+        for _, Module in ModuleSystem.Modules do
+            for Key, _ in Module do
+                if Key == "Init" then
+                    Module[Key] = function()
+                        error("Module:Init() can only be called by Axis!")
+                    end
+                    continue
+                end
+
+                if Key == "Start" then
+                    Module[Key] = function()
+                        error("Module:Start() can only be called by Axis!")
+                    end
+                    continue
+                end
             end
         end
     end)

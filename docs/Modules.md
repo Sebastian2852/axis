@@ -37,6 +37,10 @@ Make sure to **optimize the `Init` function** to run as quickly as possible. Any
 
 Since all `Init` functions need to complete before any `Start` functions are called, **avoid using blocking or yielding operations** in `Init`, as they can significantly delay the startup process.
 
+:::danger 
+The module's :Start() and :Init() functions are "removed" once Axis is booted. So calling the `Start` or `Init` functions will error!
+:::
+
 ## Adding modules to Axis
 
 Now that we have a simple test module we can add it to Axis. Ideally you should have 1 folder next to your startup script containing all the Module module scripts. Once this is true you can add this above the `Axis:Boot` function call:

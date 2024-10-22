@@ -89,24 +89,45 @@ function ControllerSystem:Start()
     ControllerSystem.Started = true
 
     return Promise.new(function(Resolve)
-        local ModuleInitPromises = {}
-        for _, Module in ControllerSystem.Controllers do
-            if type(Module.Init) == "function" then
-                table.insert(ModuleInitPromises, Promise.new(function(R)
-                    debug.setmemorycategory("AXIS_CONTROLLERINIT_"..Module.Name)
-                    Module:Init()
+        -- Init all controllers
+        local ControllerInitPromises = {}
+        for _, Controller in ControllerSystem.Controllers do
+            if type(Controller.Init) == "function" then
+                table.insert(ControllerInitPromises, Promise.new(function(R)
+                    debug.setmemorycategory("AXIS_CONTROLLERINIT_"..Controller.Name)
+                    Controller:Init()
                     R()
                 end))
             end
         end
-        Resolve(Promise.all(ModuleInitPromises))
+        Resolve(Promise.all(ControllerInitPromises))
     end):andThen(function()
-        for _, Module in ControllerSystem.Controllers do
-            if type(Module.Start) == "function" then
+        -- Start all controllers
+        for _, Controller in ControllerSystem.Controllers do
+            if type(Controller.Start) == "function" then
                 task.spawn(function()
-                    debug.setmemorycategory("AXIS_CONTROLLERSTART_"..Module.Name)
-                    Module:Start()
+                    debug.setmemorycategory("AXIS_CONTROLLERSTART_"..Controller.Name)
+                    Controller:Start()
                 end)
+            end
+        end
+    end):andThen(function()
+        -- Remove start and init functions
+        for _, Controller in ControllerSystem.Controllers do
+            for Key, _ in Controller do
+                if Key == "Init" then
+                    Controller[Key] = function()
+                        error("Controller:Init() can only be called by Axis!")
+                    end
+                    continue
+                end
+
+                if Key == "Start" then
+                    Controller[Key] = function()
+                        error("Controller:Start() can only be called by Axis!")
+                    end
+                    continue
+                end
             end
         end
     end)
