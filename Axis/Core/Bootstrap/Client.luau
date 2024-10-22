@@ -1,4 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 --[=[
     @class ClientBootstrap
     @client

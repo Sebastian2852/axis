@@ -2,12 +2,6 @@
 classes = ["Axis"]
 
 [[classOrder]]
-section = "Libraries"
-classes = [
-    "RandomLib",
-]
-
-[[classOrder]]
 section = "Configs"
 classes = [
     "PlayerConfig",
@@ -25,7 +19,8 @@ classes = [
 [[classOrder]]
 section = "Controllers"
 classes = [
-    "PlayerController"
+    "PlayerController",
+    "CameraController",
 ]
 
 gitSourceBranch = "Main"

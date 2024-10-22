@@ -10,15 +10,6 @@ local Axis = {}
 local Types = require(script.Parent.Core.Types)
 
 --[=[
-    Contains all the custom libraries axis provides
-    @within Axis
-    @prop Lib {Random: RandomLib}
-    @readonly
-]=]
-Axis.Lib = {}
-Axis.Lib.Random = require(script.Parent.Libraries.Random)
-
---[=[
     External promise library
 
     @within Axis

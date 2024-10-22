@@ -1,6 +1,7 @@
 --[=[
     @class PlayerConfig
     @tag Config
+    @server
     All config relating to player's and their characters
 ]=]
 local PlayerConfig = {}

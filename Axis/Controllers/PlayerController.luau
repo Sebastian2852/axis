@@ -50,4 +50,14 @@ function PlayerController:EnableControls()
     Controls:Enable()
 end
 
+--[=[
+    Returns the player's cahracter
+
+    @yields
+    @return Model
+]=]
+function PlayerController:GetCharacter() :Model
+    return Axis.Player.Character or Axis.Player.CharacterAdded:Wait()
+end
+
 return PlayerController
